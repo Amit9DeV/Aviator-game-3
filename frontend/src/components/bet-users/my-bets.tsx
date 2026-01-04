@@ -22,7 +22,7 @@ const MyBets = () => {
                     {state && state.state.myBets.map((user, key) => (
                         <div className={`bet-item pr-2 ${user.cashouted ? "celebrated" : ""}`} key={key}>
                             <div className="user">
-                                <div className="username">{new Date(user.date).getHours() + ":" + new Date(user.date).getMinutes()}</div>
+                                <div className="username">{new Date(user.createdAt).getHours() + ":" + new Date(user.createdAt).getMinutes()}</div>
                             </div>
                             <div className="bet">
                                 {Number(user.betAmount).toFixed(2)}

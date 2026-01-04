@@ -1,5 +1,6 @@
 import React from "react"
-import Context, { BettedUserType, UserType } from "../../context";
+import Context from "../../context";
+import { BettedUserType, UserType } from "../../utils/interfaces";
 // import { useCrashContext } from "../Main/context";
 
 interface AllDataProps {

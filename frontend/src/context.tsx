@@ -5,38 +5,7 @@ import { useLocation } from "react-router";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 import { config } from "./config";
-
-export interface BettedUserType {
-  name: string;
-  betAmount: number;
-  cashOut: number;
-  cashouted: boolean;
-  target: number;
-  img: string;
-}
-
-export interface UserType {
-  balance: number;
-  userType: boolean;
-  img: string;
-  userName: string;
-  f: {
-    auto: boolean;
-    betted: boolean;
-    cashouted: boolean;
-    betAmount: number;
-    cashAmount: number;
-    target: number;
-  };
-  s: {
-    auto: boolean;
-    betted: boolean;
-    cashouted: boolean;
-    betAmount: number;
-    cashAmount: number;
-    target: number;
-  };
-}
+import { UserType, BettedUserType, GameHistory } from "./utils/interfaces";
 
 export interface PlayerType {
   auto: boolean;
@@ -59,15 +28,6 @@ interface GameBetLimit {
   minBet: number;
 }
 
-declare interface GameHistory {
-  _id: number;
-  name: string;
-  betAmount: number;
-  cashoutAt: number;
-  cashouted: boolean;
-  date: number;
-}
-
 interface UserStatusType {
   fbetState: boolean;
   fbetted: boolean;
@@ -79,6 +39,7 @@ interface ContextDataType {
   myBets: GameHistory[];
   width: number;
   userInfo: UserType;
+  seed: string;
   fautoCashoutState: boolean;
   fautoCound: number;
   finState: boolean;
@@ -111,6 +72,19 @@ interface ContextType extends GameBetLimit, UserStatusType, GameStatusType {
   rechargeState: boolean;
   myUnityContext: UnityContext;
   currentTarget: number;
+  userInfo: UserType;
+  socket: any;
+  msgTab: boolean;
+  msgReceived: boolean;
+  setMsgReceived: (received: boolean) => void;
+  msgData: any[];
+  setMsgData: (msgs: any[]) => void;
+  toggleMsgTab: () => void;
+  handleChangeUserSeed: (seed: string) => void;
+  updateUserInfo: (attrs: Partial<UserType>) => void;
+  handleGetSeed: (id?: number) => void;
+  seed: string;
+  handleGetSeedOfRound: (param: any) => Promise<any>;
   setCurrentTarget(attrs: Partial<number>);
   update(attrs: Partial<ContextDataType>);
   getMyBets();
@@ -130,10 +104,21 @@ const init_state = {
   userInfo: {
     balance: 0,
     userType: false,
-    img: "",
+    avatar: "",
+    userId: "",
+    currency: "INR",
     userName: "",
+    ipAddress: "",
+    platform: "",
+    token: "",
+    Session_Token: "",
+    isSoundEnable: true,
+    isMusicEnable: true,
+    msgVisible: true,
     f: {
       auto: false,
+      autocashout: false,
+      betid: "",
       betted: false,
       cashouted: false,
       cashAmount: 0,
@@ -142,6 +127,8 @@ const init_state = {
     },
     s: {
       auto: false,
+      autocashout: false,
+      betid: "",
       betted: false,
       cashouted: false,
       cashAmount: 0,
@@ -149,6 +136,7 @@ const init_state = {
       target: 2,
     },
   },
+  seed: "",
   fautoCashoutState: false,
   fautoCound: 0,
   finState: false,
@@ -509,6 +497,19 @@ export const Provider = ({ children }: any) => {
         bettedUsers: [...bettedUsers],
         previousHand: [...previousHand],
         history: [...history],
+        userInfo: state.userInfo,
+        socket: socket,
+        msgTab: false,
+        msgReceived: false,
+        setMsgReceived: () => {},
+        msgData: [],
+        setMsgData: () => {},
+        toggleMsgTab: () => {},
+        handleChangeUserSeed: () => {},
+        updateUserInfo: () => {},
+        handleGetSeed: () => {},
+        seed: state.seed,
+        handleGetSeedOfRound: async () => {},
         setCurrentTarget,
         update,
         getMyBets,
